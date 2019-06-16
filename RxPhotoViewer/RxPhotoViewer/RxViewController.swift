@@ -12,7 +12,7 @@ import RxSwift
 class RxViewController: UIViewController {
     /*
      To create tidy dispose we'll use disposeBag othewise we've to put subscrib.dispose() in everywhere.
-    */
+     */
     private let disposeBag = DisposeBag() // Terminate the subscription so that it would not emit anything.
     private let images = Variable<[UIImage]>([]) //Observable image array
     private var imageCache = [Int]()
@@ -35,9 +35,9 @@ class RxViewController: UIViewController {
                 // Add image to imagePreview
                 preview.image = UIImage.collage(images: photos!,size: preview.frame.size)
             })
-            .addDisposableTo(disposeBag) // adding to disposeBag.
+            .disposed(by: disposeBag) // adding to disposeBag.
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -46,16 +46,16 @@ class RxViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         // advanced debugging feature of RxSwift called Resources, which gives you the number of current allocations of observables, observers, and disposables. By default RxSwift
-        print(" Resource cou t: \(RxSwift.Resources.total)")
+        print(" Resource count: \(RxSwift.Resources.total)")
     }
     
     private func updateUI(_ photos: [UIImage]) {
         saveButton.isEnabled = photos.count > 0 && photos.count % 2 == 0
         clearButton.isEnabled = photos.count > 0
         addButton.isEnabled = photos.count < 6
-        title = photos.count > 0 ? "\(photos.count) photos" : "Collage"
+        title = photos.count > 0 ? "\(photos.count) photos" : "Photo Viewer"
     }
-
+    
     @IBAction func addPhoto(_ sender: UIBarButtonItem) {
         // Talking to other View Controller
         
@@ -73,7 +73,7 @@ class RxViewController: UIViewController {
             })
             .filter({[weak self] newImage in
                 // Adding images without duplication to imageCache
-                let len = UIImagePNGRepresentation(newImage)?.count ?? 0
+                let len = newImage.pngData()?.count ?? 0
                 guard self?.imageCache.contains(len) == false else {
                     return false
                 }
@@ -87,18 +87,18 @@ class RxViewController: UIViewController {
                 }, onDisposed: {
                     print("completed photo selection")
             })
-            .addDisposableTo(photosViewController.bag)// Dispose to RxPhotoCollectionView
+            .disposed(by: photosViewController.bag)// Dispose to RxPhotoCollectionView
         
         // Add new subscription to add thumb to navigation item
         newPhoto
             .ignoreElements()
             .subscribe(onCompleted: { [weak self] in
                 self?.updateNavigationItem()
-            }).addDisposableTo(photosViewController.bag)
+            }).disposed(by: photosViewController.bag)
         
         navigationController!.pushViewController(photosViewController, animated: true)
     }
-
+    
     @IBAction func clearPreview(_ sender: UIButton) {
         images.value = []
         imageCache = []
@@ -113,7 +113,7 @@ class RxViewController: UIViewController {
                 self?.showMessage("Saved")
                 self?.clearPreview(UIButton())
         })
-        .addDisposableTo(disposeBag)
+            .disposed(by: disposeBag)
     }
     
     func showMessage(_ title: String, description: String? = nil) {

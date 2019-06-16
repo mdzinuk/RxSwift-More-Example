@@ -1,5 +1,5 @@
 # Uncomment the next line to define a global platform for your project
-# platform :ios, '9.0'
+# platform :ios, '12.0'
 
 target 'RxPhotoViewer' do
 	use_frameworks!
@@ -8,16 +8,16 @@ target 'RxPhotoViewer' do
 	project 'RxPhotoViewer/RxPhotoViewer.xcodeproj'
 
   	# Pods for RxSwift-WorkSpace
-   	pod 'RxSwift', '~> 3.1'
+   	pod 'RxSwift', '~> 5'
 
   	target 'RxPhotoViewerTests' do
     	inherit! :search_paths
-    	pod 'RxSwift', '~> 3.1'
+    	pod 'RxSwift', '~> 5'
   	end
 
   	target 'RxPhotoViewerUITests' do
     	inherit! :search_paths
-    	pod 'RxSwift', '~> 3.1'
+    	pod 'RxSwift', '~> 5'
   	end
 end
 
@@ -28,23 +28,23 @@ target 'RxNetworking' do
 	project 'RxNetworking/RxNetworking.xcodeproj'
 
   	# Pods for RxSwift-WorkSpace
-   	pod 'RxSwift', '~> 3.1'
-	pod 'RxCocoa', '~> 3.4'
-  	pod 'Kingfisher', '~> 3.9.1'
+   	pod 'RxSwift', '~> 5'
+	pod 'RxCocoa', '~> 5'
+  	pod 'Kingfisher', '~> 5.0'
 
 
   	target 'RxNetworkingTests' do
     	inherit! :search_paths
-    	pod 'RxSwift', '~> 3.1'
-	pod 'RxCocoa', '~> 3.4'
-  	pod 'Kingfisher', '~> 3.9.1'
+    	pod 'RxSwift', '~> 5'
+	pod 'RxCocoa', '~> 5'
+  	pod 'Kingfisher', '~> 5.0'
 	end
 
   	target 'RxNetworkingUITests' do
     	inherit! :search_paths
-    	pod 'RxSwift', '~> 3.1'
-	pod 'RxCocoa', '~> 3.4'
-  	pod 'Kingfisher', '~> 3.9.1'
+    	pod 'RxSwift', '~> 5'
+	pod 'RxCocoa', '~> 5'
+  	pod 'Kingfisher', '~> 5.0'
   	end
 end
 

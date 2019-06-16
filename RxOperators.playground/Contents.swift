@@ -3,7 +3,6 @@
 import Foundation
 import RxSwift
 
-
 example(of: "IgnoreElements") {
     // Ignore everything except completed event.
     let strikes = PublishSubject<String>()
@@ -14,7 +13,7 @@ example(of: "IgnoreElements") {
         .subscribe({_ in
             print("You are out!")
         })
-        .addDisposableTo(disposeBag)
+        .disposed(by: disposeBag)
     
     strikes.onNext("X")
     strikes.onNext("Y")
@@ -32,7 +31,7 @@ example(of: "EleementAt") {
         .subscribe({ _ in
             print("You're out!")
         })
-        .addDisposableTo(disposeBag)
+        .disposed(by: disposeBag)
     
     strikes.onNext("X")
     strikes.onNext("Y")
@@ -51,7 +50,7 @@ example(of: "SkipUntil") {
         .subscribe(onNext: {
             print($0)
         })
-        .addDisposableTo(disposeBag)
+        .disposed(by: disposeBag)
     
     subject.onNext("A")
     subject.onNext("B")
@@ -67,7 +66,7 @@ example(of: "take") {
         .take(3)
         .subscribe(onNext: {
             print($0) })
-        .addDisposableTo(disposeBag)
+        .disposed(by: disposeBag)
 }
 
 example(of: "distinctUntilChanged(_:)") {
@@ -98,7 +97,7 @@ example(of: "flatMap") {
         .subscribe(onNext: {
             print($0)
         })
-        .addDisposableTo(disposeBag)
+        .disposed(by: disposeBag)
     
     student.onNext(ryan)
     ryan.score.value = 85
@@ -137,16 +136,15 @@ example(of: "usage") {
         .filter { $0 < 10 }
         .take(10)
         .toArray()
-        .subscribe(onNext: {
-            let phone = numberFormatter(from: $0)
-            
+        .subscribe(onSuccess: {
+            let phone = numberFormatter(from: $0 )
             if let contact = phoneNumbers[phone] {
                 print("Dialing \(contact) (\(phone))...")
             } else {
                 print("Contact not found")
             }
-        })
-        .addDisposableTo(disposeBag)
+        }, onError: nil)
+        .disposed(by: disposeBag)
     
     input.onNext(0)
     input.onNext(603)
@@ -157,7 +155,7 @@ example(of: "usage") {
     // Confirm that 7 results in "Contact not found", and then change to 2 and confirm that Junior is found
     input.onNext(7)
     
-    "5551212".characters.forEach {
+    "5551212".forEach {
         if let number = (Int("\($0)")) {
             input.onNext(number)
         }

@@ -13,9 +13,9 @@ import RxSwift
 private let reuseIdentifier = "PhotoCellIdentifer"
 
 class RxPhotoCollectionViewController: UICollectionViewController {
-
+    
     let bag = DisposeBag()
-
+    
     // MARK: private properties
     fileprivate let selectedPhotosSubject = PublishSubject<UIImage>()
     var selectedPhotos: Observable<UIImage> {
@@ -64,17 +64,17 @@ class RxPhotoCollectionViewController: UICollectionViewController {
             })
             .disposed(by: bag)
     }
-
+    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
-
+    
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let asset = photos.object(at: indexPath.item)
-         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! PhotoCell
-
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! PhotoCell
+        
         cell.representedAssetIdentifier = asset.localIdentifier
         imageManager.requestImage(for: asset, targetSize: thumbnailSize, contentMode: .aspectFit, options: nil, resultHandler: { image, _ in
             if(cell.representedAssetIdentifier == asset.localIdentifier) {
@@ -83,7 +83,7 @@ class RxPhotoCollectionViewController: UICollectionViewController {
         })
         return cell
     }
-
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         // mark signal to finish emition
@@ -123,7 +123,7 @@ class RxPhotoCollectionViewController: UICollectionViewController {
             })
             .disposed(by: bag)
     }
-
+    
 }
 
 

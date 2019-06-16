@@ -7,7 +7,7 @@ import RxSwift
  Subjects work as both Observable and Observer.
  
  There are four subject types in RxSwift~
-*/
+ */
 
 example(of: "publishing subject") {
     // Starts empty and only emits new elements to subscribers. 
@@ -44,7 +44,7 @@ example(of: "publishing subject") {
     subject.subscribe {
         print("3)", $0.element ?? $0)
         }
-        .addDisposableTo(disposeBag)
+        .disposed(by: disposeBag)
     subject.onNext("?")
 }
 
@@ -54,7 +54,7 @@ example(of: "Behavior Subject") {
     enum MyError: Error { case anError }
     
     func description<T: CustomStringConvertible>(label: String, event: Event<T>) {
-        print(label, event.element ?? event.error ?? event)
+        print(label, event.element ?? event.error ?? "" )
     }
     
     let subject = BehaviorSubject(value: "Init value")
@@ -63,12 +63,12 @@ example(of: "Behavior Subject") {
     
     subject.subscribe{
         description(label: "1)", event: $0)
-        }.addDisposableTo(disposeBag)
+        }.disposed(by: disposeBag)
     
     subject.onError(MyError.anError)
     subject.subscribe{
         description(label: "2)", event: $0)
-        }.addDisposableTo(disposeBag)
+        }.disposed(by: disposeBag)
 }
 
 example(of: "ReplaySubject") {
@@ -76,7 +76,7 @@ example(of: "ReplaySubject") {
     // temporarily cache, or buffer, the latest elements it emits, up to a specified size of our choosing
     enum MyError: Error { case anError }
     func description<T: CustomStringConvertible>(label: String, event: Event<T>) {
-        print(label, event.element ?? event.error ?? event)
+        print(label, event.element ?? event.error ?? "")
     }
     
     let subject = ReplaySubject<String>.create(bufferSize: 2)
@@ -87,39 +87,39 @@ example(of: "ReplaySubject") {
     subject.onNext("3")
     
     subject.subscribe { description(label: "1)", event: $0) }
-        .addDisposableTo(disposeBag)
+        .disposed(by: disposeBag)
     subject.subscribe { description(label: "2)", event: $0) }
-        .addDisposableTo(disposeBag)
+        .disposed(by: disposeBag)
     
     subject.onNext("4")
     subject.subscribe { description(label: "3)", event: $0) }
-        .addDisposableTo(disposeBag)
+        .disposed(by: disposeBag)
     
     subject.onError(MyError.anError)
     subject.dispose()
     subject.subscribe { description(label: "4)", event: $0) }
-        .addDisposableTo(disposeBag)
+        .disposed(by: disposeBag)
 }
 
 example(of: "Variable") {
     // Wraps a BehaviorSubject, preserves its current value as state, and replays only the latest/initial value to new subscribers
     enum MyError: Error { case anError }
     func description<T: CustomStringConvertible>(label: String, event: Event<T>) {
-        print(label, event.element ?? event.error ?? event)
+        print(label, event.element ?? event.error ?? "")
     }
     
-    var variable = Variable("InitialValue")
+    let variable = Variable<String>("InitialValue")
     let disposeBag = DisposeBag()
     
     variable.value = "New value"
     variable.asObservable()
         .subscribe { description(label: "1)", event: $0) }
-        .addDisposableTo(disposeBag)
+        .disposed(by: disposeBag)
     
     variable.value = "1"
     variable.asObservable()
         .subscribe { description(label: "2)", event: $0) }
-        .addDisposableTo(disposeBag)
+        .disposed(by: disposeBag)
     
     variable.value = "2"
 }
@@ -155,7 +155,7 @@ example(of: "PublishSubject") {
     
     dealtHandler.subscribe(onNext: { print(cardString(for: $0), "for", points(for: $0), "points")},
                            onError: { print(String(describing: $0).capitalized) })
-        .addDisposableTo(disposeBag)
+        .disposed(by: disposeBag)
     
     deal(10)
 }
